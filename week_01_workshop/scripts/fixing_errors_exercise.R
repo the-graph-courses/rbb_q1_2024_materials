@@ -18,20 +18,28 @@
 # A.
 # A patient took 12000 steps on Monday and 15000 steps on Tuesday. 
 # The code below tries to calculate the average number of steps taken by a patient. 
+
 # Incorrect code:
 steps_monday <- 12000
 steps_tuesday <- 15000
 average_steps <- steps_monday + steps_tuesday / 2
 average_steps
 
+# 1A Corrected code:
+
+
 # B.
 # There are 500 smokers in a population of 20000. 
 # The code below attempts to calculate the percentage of smokers in the population. 
+
 # Incorrect code:
 total_population <- 20000
 smokers <- 500
 percentage_smokers <- (smokers ÷ total_population) * 100
 percentage_smokers
+
+# 1B Corrected code:
+
 
 
 # 2. NAMING R OBJECTS -----------------------------------------------------
@@ -40,14 +48,24 @@ percentage_smokers
 # Identify and correct these errors.
 
 # A.
+
 # Incorrect code:
 1st_student <- "John Doe"
 1st_student
 
+# 2A Corrected code:
+
+
+
 # B.
+
 # Incorrect code:
 total population <- 10000
 total population
+
+# 2B Corrected code:
+
+
 
 
 
@@ -55,20 +73,36 @@ total population
 # Each block of code attempts to call a function, but contains an error. 
 # Identify and correct these errors.
 
+
 # A.
 # The code below tries to calculate the square root of a number.
+
 # Incorrect code:
 sqrt("16")
 
+# 3A Corrected code:
+
+
+
 # B.
 # The code below tries to calculate the square root of a number.
+
 # Incorrect code:
 sqrt[16]
 
+# 3B Corrected code:
+
+
+
 # C.
 # The code below tries to get the first 5 rows of the iris dataframe
+
 # Incorrect code:
 head(5, iris)
+
+# 3C Corrected code:
+
+
 
 
 # 4. FUNCTION NESTING/ INTERMEDIATE OBJECTS --------------------------------------
@@ -80,13 +114,23 @@ head(5, iris)
 # to plot the head (first 6 rows) of the 'women' dataset.
 # Identify and fix the error. 
 # CLUE: It involves function order.
+
 # Incorrect code:
 head(plot(women))
+
+# 4A Corrected code:
+
+plot(women*2)
 
 # B.
 # The code below tries to plot the head (first 6 rows) of the 'women' dataset
 # by assigning an intermediate object.
 # There is a problem on the second line though. Identify and fix it.
+
 # Incorrect code:
 head_women <- head(women)
 plot(head)
+
+# 4B Corrected code:
+
+
