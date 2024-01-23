@@ -38,9 +38,9 @@ The dataset analysed in this report provides information about `r nrow(col_accid
 
 ## Age group distribution per  group
 
-The two categorical variables I chose to look at are age group and . The victims ranged from `r min(col_accidents_clean$age)` to `max(col_accidents_clean$age)` years old.
+The two categorical variables I chose to look at are age group and sex. The victims ranged from `r min(col_accidents_clean$age)` to `max(col_accidents_clean$age)` years old.
 
-The plots below show the age group distributions for each .
+The plots below show the age group distributions for each sex.
 
 ```{r male-plot, echo = F, fig.width=11}
 esquisse::esquisser(col_accidents_clean)
@@ -96,4 +96,4 @@ flex_with_caption <- set_caption(flex, caption = "Age &  distribution of fatalit
 flex_with_caption
 ```
 
-For both es, the age group with the most deaths was the 20 to 24 age group. 
+For both sexes, the age group with the most deaths was the 20 to 24 age group. 
