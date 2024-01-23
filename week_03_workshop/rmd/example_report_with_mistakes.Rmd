@@ -1,0 +1,99 @@
+---
+title: "Workshop Example report: PROBLEMS"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    toc: true
+author: "Your name here"
+date: "2024-01-23"
+---
+
+This document is a model example of what a report for this assignment can look like. You may use this document as a guide for how to write your report.
+
+HOWEVER! There are multiple issues with the document that will prevent it from knitting successfully. You mission is to find and fix the issues, and save the report! Follow the instructions in the workshop guide for hints.
+
+------------------------------------------------------------------------
+
+- Road Injuries of Motorcyclists in Colombia 
+
+```{r setup, include = F}
+# Load packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, here, patchwork, janitor, esquisse)
+```
+
+## Police records of fatal motor accidents in Medellín
+
+```{r data-import-and-cleaning, echo = F}
+# Import CSV
+col_accidents <- read_csv(here("data/teachers_example_data_motorcycle_accidents_colombia.csv"))
+
+# Tidy variable names
+# the age group column name (and a few others) have spaces in them. This makes them hard to work with.
+# To remove these from the column names, we can use the clean_names function from janitor
+col_accidents_clean <- col_accidents %>% clean_names()
+```
+
+The dataset analysed in this report provides information about `r nrow(col_accidents_clean)` deaths caused by motorcycle accidents in Medellín, a Colombian city, from 2012 to 2015. The data is sourced from medical and police certificates and can be accessed [here](https://zenodo.org/record/4836304).
+
+## Age group distribution per  group
+
+The two categorical variables I chose to look at are age group and . The victims ranged from `r min(col_accidents_clean$age)` to `max(col_accidents_clean$age)` years old.
+
+The plots below show the age group distributions for each .
+
+```{r male-plot, echo = F, fig.width=11}
+esquisse::esquisser(col_accidents_clean)
+
+# Plot for male victims.
+male <-
+  col_accidents_clean %>%
+  filter(sex %in% "male") %>%
+  ggplot() +
+  aes(x = age_group) +
+  geom_bar(fill = "#678BCB") +
+  labs(title = "Age group distribution of fatalities from motorcycle accidents",
+       subtitle = "(Men)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 15L, face = "bold"),
+        plot.subtitle = element_text(size = 15L))
+
+male
+```
+
+
+```{r female-plot, echo = F, fig.width=11}
+# Plot for female victims
+female <-
+  col_accidents_clean %>%
+  filter(sex %in% "female") %>%
+  ggplot() +
+  aes(x = age_group) +
+  geom_bar(fill = "#A4BBB6") +
+  labs(subtitle = "(Women)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 15L,face = "bold"),
+        plot.subtitle = element_text(size = 15L))
+```
+
+
+The table below summarizes the data shown in the figures:
+
+```{r summary-table, include = F}
+# Create a summary data frame of two categorical variables with janitor::tabyl()
+freq_df <- col_accidents_clean %>% tabyl(age_group, sex)
+freq_df
+
+# NOTE THAT THE CHUNK OPTIONS HERE SAY "include = F". This ensures that the data frame is not printed in the knitted HTML.
+```
+
+
+```{r print-flex}
+# Print your frequency table in a pretty format
+flex <- freq_df %>% flextable()
+
+flex_with_caption <- set_caption(flex, caption = "Age &  distribution of fatalities from motorcycle accidents")
+flex_with_caption
+```
+
+For both es, the age group with the most deaths was the 20 to 24 age group. 
