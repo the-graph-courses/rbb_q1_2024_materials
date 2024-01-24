@@ -36,7 +36,7 @@ col_accidents_clean <- col_accidents %>% clean_names()
 
 The dataset analysed in this report provides information about `r nrow(col_accidents_clean)` deaths caused by motorcycle accidents in Medellín, a Colombian city, from 2012 to 2015. The data is sourced from medical and police certificates and can be accessed [here](https://zenodo.org/record/4836304).
 
-## Age group distribution per  group
+## Age group distribution per sex group
 
 The two categorical variables I chose to look at are age group and sex. The victims ranged from `r min(col_accidents_clean$age)` to `max(col_accidents_clean$age)` years old.
 
