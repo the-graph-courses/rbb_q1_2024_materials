@@ -1,0 +1,228 @@
+---
+title: "Workshop 5: Creating and transforming variables"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    toc: true
+    number_sections: false
+author: "Author's name here"
+date: "2024-02-06"
+editor_options: 
+  chunk_output_type: inline
+  markdown: 
+    wrap: none
+---
+
+# Introduction
+
+Welcome!
+
+For this workshop, we will be cleaning a dataset. It is a hands-on approach to using {dplyr} functions such as `select()`, `rename()`, `mutate()`, and `case_when()`. These have been covered in the prework material of the "Data wrangling" module:
+
+-   [Select & rename](https://the-graph-courses.github.io/data_untangled_wp/lessons/ls01_select_rename.html)
+
+-   [Mutate](https://the-graph-courses.github.io/data_untangled_wp/lessons/ls03_mutate.html)
+
+-   [Conditional mutate](https://the-graph-courses.github.io/data_untangled_wp/lessons/ls04_conditional_mutate.html)
+
+The lesson notes (linked above) can be very helpful for completing the exercise below, so do refer to them during the workshop!
+
+# Set up for the exercise
+
+1.  **First download the repo to your local computer.** To get started, you should download, unzip, and look through the assignment folder.
+
+2.  **Open the** **RStudio Project** by clicking on the relevant *.Rproj* file in the unzipped workshop folder. Make sure you have opened week_05_workshop.Rproj in RStudio by looking at the name of your RStudio window, or in the upper right corner of your screen.
+
+3.  **Open the assignment Rmd.** Navigate to the Files tab in RStudio and open the "rmd" folder. You will be working in the file called "week_05_exercise.Rmd". This Rmd contains both the instructions and the workshop assignment in one file.
+
+4.  **Complete the assignment.** Work through the steps in "week_05_exercise.Rmd". Replace every instance of `"WRITE_YOUR_CODE_HERE"` with your answers. The assignment should be submitted individually, but you are encouraged to brainstorm with partners. Though you are allowed to work with group members, *it is important that all the code you submit has been typed yourself*.
+
+# Load packages and data
+
+Now that you have set up your RStudio project, you can load in and clean your dataset.
+
+To get started, **load in the needed packages**: {tidyverse}, {here}, and {esquisse}.
+
+```{r}
+# Load packages
+if(!require(pacman)) install.packages("pacman")
+"WRITE_YOUR_CODE_HERE"
+```
+
+Now, let's **read the dataset into your RStudio environment**. The data frame you import should have 142 rows and 9 columns. Remember to use the `here()` function to use project-relative paths.
+
+```{r}
+# Import CSV
+pa_raw <- "WRITE_YOUR_CODE_HERE"
+```
+
+Next, **remove the first two variables of the `pa_raw` data frame**, as they are not relevant to our analysis today. Save the subset as a new data frame called `pa_mini`.
+
+```{r}
+# Subset data frame
+pa_mini <- "WRITE_YOUR_CODE_HERE"
+```
+
+Now, **view the first few rows of the new dataset** and compare it to the variable definitions below.
+
+```{r}
+head(pa_mini)
+```
+
+Your data should have 7 variables now:
+
+-   `status`: adult (Adulte) or child (Enfant)
+-   `bmi`: body mass index
+-   `sedentary_ap_s_day`: sedentary behaviour (seconds/week)
+-   `light_ap_s_day`: light physical activity (seconds/week)
+-   `mvpa_s_day`: moderate to vigorous physical activity (seconds/week)
+-   `oms_recommendation`: whether or not WHO recommendations for physical activity are being met (OMS stands for Organisation Mondiale de la Santé, which is the French name for WHO)
+
+# Clean data with {dplyr}
+
+## **Step 1**: Examine and clean dataset
+
+Before jumping into wrangling or plotting, let's think about the types of variables in our dataset. Take note of which variables should be numeric and which should be factors.
+
+Now let's check that R has classified these variables correctly. You can check the data classes assigned to each variable with `summary()` or `glimpse()`.
+
+```{r}
+summary(pa_mini)
+```
+
+Notice that 4 of your variables are of class **character**, but they should be **numeric** (e.g. `bmi`). This is because those variables have some words in them in addition to numbers. Can you spot those words when you view the dataset?
+
+```{r}
+#View your dataset!
+"WRITE_YOUR_CODE_HERE"
+```
+
+Additionally, 3 variables of class "character" should be converted to factors. There are also 4 variables that should be numeric. We need to change all 7 variables to correct type, because this will be essential for further manipulations and for plotting!
+
+Think about which `{dplyr}` function you should use to **convert your variables into the right type**. Complete the code by filling in the blanks below! Save the updated dataset as a new data frame called `pa_clean`.
+
+```{r}
+# Change variables' type
+pa_clean <- pa_mini %>%
+  ______(sex = ________(sex),
+         ______ = as.factor(status),
+         ___ = as.numeric(bmi),
+         sedentary_ap_s_day = __________(sedentary_ap_s_day),
+         light_ap_s_day = as.numeric(__________),
+         __________ = as.numeric(mvpa_s_day),
+         oms_recommendation = ________(oms_recommendation)
+  )
+# Note: You may get a warning message about your numeric columns. This is telling you that some NAs were introduced to the data. This is what we want to do in this case, so you can disregard the message.
+```
+
+Now that you have converted them, use `summary()` or `glimpse()` again to check that the data classes are correct. **Notice that in your new numeric columns, the words that used to be there has been replaced with `NA`** (this is what the warning message was about).
+
+```{r}
+# Double check that data classes are correct with summary() or glimpse().
+"WRITE_YOUR_CODE_HERE"
+```
+
+Next, notice that the status variable currently uses the French terms "Adulte" and "Enfant". **Transform the status variable by replacing values in that column to say "Adult" and "Child" instead of "Adulte" and "Enfant".** Save the updated dataset as a new data frame called `pa_clean2`.
+
+```{r}
+pa_clean2 <- pa_clean %>%
+  "WRITE_YOUR_CODE_HERE"
+```
+
+**Lastly, rename `oms_recommendation` to `who_recommendation`** (OMS is French for WHO). Save the updated dataset as a new data frame called `pa_clean3`.
+
+```{r}
+pa_clean3 <- pa_clean2 %>% 
+  "WRITE_YOUR_CODE_HERE"
+```
+
+## **Step 2**: Convert the physical activity variables
+
+Currently, the variables of physical activity are in seconds per day. There are 3 types of physical activity variables: sedentary behavior (`sedentary_ap_s_day`), light physical activity (`light_ap_s_day`), and moderate to vigorous physical activity (`mvpa_s_day`). These variables are measured in seconds per day.
+
+However, the [WHO recommendations](https://apps.who.int/iris/bitstream/handle/10665/337001/9789240014886-eng.pdf) for physical activity are in minutes per week, so we want to align with these measures. To do this, complete the following manipulations:
+
+1.  **Convert these numerical variables from seconds/day to minutes/week**. (Hint: use `mutate()` to create new variables that are in minutes per week. As a kind reminder, 60 seconds = 1 minute and 7 days = 1 week.)
+
+2.  **Remove the previous seconds per day variables**. (Hint: you can use `ends_with()` within the `select()` function.)
+
+Save the updated dataset as a new data frame called `pa_clean4`.
+
+```{r}
+pa_clean4 <- pa_clean3 %>%
+  "WRITE_YOUR_CODE_HERE"
+```
+
+You will use this `pa_clean4` for all the following step.
+
+## **Step 3**: Combine physical activity variables
+
+**Create a new column that adds light physical activity and moderate to vigorous physical activity**, and call it `total_pa_m_wk`. This should give us the total amount of activity in minutes per week. Save the updated dataset as a new data frame called `pa_clean5`.
+
+```{r}
+pa_clean5 <- pa_clean4 %>% 
+  "WRITE_YOUR_CODE_HERE"
+```
+
+## **Step 4**: Create a Boolean variable
+
+The `who_recommendation` variable uses "Yes" and "No" to indicate whether or not WHO recommendations for physical activity are being met.
+
+**Create a Boolean variable called `met_recommendation`** that is set to `TRUE` if the individual met WHO recommendations.
+
+Save the updated dataset as a new data frame called `pa_clean_final`.
+
+```{r}
+pa_clean_final <- pa_clean5 %>% 
+  "WRITE_YOUR_CODE_HERE"
+```
+
+Finally, make a table to display the number of adults and children who met or did not meet the WHO recommendations. How many adults and children did not meet the recommended standard? And how many did meet it?"
+
+```{r}
+pa_tabyl <- "WRITE_YOUR_CODE_HERE"
+```
+
+# Visualize data with {esquisse}
+
+In this section you will use `pa_clean_final` to generate some plots!
+
+## **Plot 1**: Histogram
+
+Histograms are used to visualize the distribution of a single numeric (continuous) variable. Chose a variable from the dataset that you can plot a histogram with.
+
+Using esquisse, create your own histogram. (TIP: If you're stuck, check out the histogram example located in your `rmd` folder titled, `plot_1_example.jpg` for some inspiration!)
+
+```{r}
+"ESQUISSE_CODE_HERE"
+```
+
+Note: Sometimes code generated by esquisse can have unwanted filtering. This is due to a bug in the package. Double check your code and remove any extra `filter()` operations.
+
+## **Plot 2**: Boxplot
+
+Boxplots are used to visualize the distribution of a numeric variable (preferably the same one used for Plot 1), split by the values of a discrete/categorical variable.
+
+1.  Use esquisse to create a boxplot to show the distribution of a numeric variable. Use the same variable used for your histogram on your x axis, and plot it against a categorical variable on your y axis.
+
+2.  Set fill color to match the values of your categorical variable.
+
+TIP: There is also a boxplox example located in your `rmd` folder titled, `plot_2_example.jpg`. Study the image closely and try to create something similar.
+
+```{r}
+"PASTE_THE_ESQUISSE_CODE_HERE"
+```
+
+# Wrap up
+
+That's it for this assignment! We will choose 2-3 people to present your work during the workshop. If you would like to share your results with the class, please let an instructor know.
+
+The group representative should prepare to screenshare and give a short (3-4 sentence) presentation.
+
+Choose and highlight one aspect of your code or plot that would be helpful and interesting to the class. For example, you can choose a question that your group found especially tricky, and explain how you found the solution. Or you can display one of your plots, and share some tips for additional customization.
+
+# Submit
+
+Once you have finished the tasks above, you should save your answers and upload your assignment Rmd on the workshop webpage. You should upload just one Rmd file with your answers (do not upload the knitted HTML or a zipped folder). Make sure to include your name in the YAML header at the top of the script.
+
+The due date for the assignment is Friday, February 9th at 23:59 PM UTC.
