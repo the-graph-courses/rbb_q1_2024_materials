@@ -71,6 +71,7 @@ head(pa_mini)
 
 Your data should have 7 variables now:
 
+-   `sex`: male or female
 -   `status`: adult (Adulte) or child (Enfant)
 -   `bmi`: body mass index
 -   `sedentary_ap_s_day`: sedentary behaviour (seconds/week)
