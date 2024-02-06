@@ -97,7 +97,7 @@ Notice that 4 of your variables are of class **character**, but they should be *
 "WRITE_YOUR_CODE_HERE"
 ```
 
-Additionally, 3 variables of class "character" should be converted to factors. There are also 4 variables that should be numeric. We need to change all 7 variables to correct type, because this will be essential for further manipulations and for plotting!
+Additionally, 3 variables of class "character" should be converted to factors. We need to change all 7 variables to correct type, because this will be essential for further manipulations and for plotting!
 
 Think about which `{dplyr}` function you should use to **convert your variables into the right type**. Complete the code by filling in the blanks below! Save the updated dataset as a new data frame called `pa_clean`.
 
@@ -112,6 +112,7 @@ pa_clean <- pa_mini %>%
          __________ = as.numeric(mvpa_s_day),
          oms_recommendation = ________(oms_recommendation)
   )
+
 # Note: You may get a warning message about your numeric columns. This is telling you that some NAs were introduced to the data. This is what we want to do in this case, so you can disregard the message.
 ```
 
