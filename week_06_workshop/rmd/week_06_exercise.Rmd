@@ -1,0 +1,162 @@
+---
+title: "Workshop 6: Grouping, Summarizing and Plotting"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    toc: true
+    number_sections: true
+author: "Author's name here"
+date: "2024-02-13"
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+# Data preparation 
+
+To get started, **load in the needed packages**: {tidyverse}, {here}, {janitor}, and {esquisse}.
+
+```{r}
+"WRITE_YOUR_CODE_HERE"
+```
+
+Now, **read the dataset into R**. The data frame you import should have 880 rows and 21 columns. Remember to use the `here()` function to allow your Rmd to use project-relative paths.
+
+```{r}
+# Import CSV
+tb_raw <- "WRITE_YOUR_CODE_HERE"
+
+# Make sure imported data looks OK and familiarize yourself with the variables
+head(tb_raw) 
+```
+
+The names of many columns in this dataset have spaces and symbols in them (e.g., `Treatment initiation delay (in days)`), which is not R-friendly. 
+
+Use `janitor::clean_names()` to give your variable names a clean and consistent format.
+
+```{r}
+# Clean variable names
+tb_renamed <- "WRITE_YOUR_CODE_HERE"
+```
+
+**Checkpoint**: The data frame should contain 880 rows and 21 columns. Column/variable names should now be converted to snake case. You can run `names(tb_renamed)` to print and check the variable names.
+
+Before moving further, let's take a closer look at the `education` variable in our dataset:
+```{r}
+# count() lets you quickly count the unique values of variables
+tb_renamed %>% 
+  count(education)
+```
+Here we see that there are 8 unique values in the `education` variable, telling us the highest education level of each TB patient. You'll notice that education levels are ordered alphabetically by default! However, in this case, it would be more useful to reorder the education levels so that they are arranged in a chronological order.
+
+The basic structure of education in India can be conceptualized as follows:
+
+-   Primary -> Middle -> Secondary -> Higher Secondary -> Graduate -> Graduate & Above
+
+
+Use `mutate()` and other **helper functions** to convert the `education` variable into a factor define the levels based on the order above.
+
+Complete the code by filling in the blanks provided below. Save the updated dataset as a new data frame called `tb_clean`.
+
+**Hint**: See the last example in section 10 of the [Conditional Mutate lesson](https://the-graph-courses.github.io/data_untangled_wp/lessons/ls04_conditional_mutate.html#10_Multiple_conditions_on_a_single_variable) for a refresher on how to define factor levels.
+
+```{r}
+tb_clean <- tb_renamed %>%
+  ________(education = factor(education,
+                              levels =  ___("No Education",
+                                            "Primary",
+                                            ________,
+                                            ________,
+                                            ________,
+                                            ________,
+                                            ________,
+                                            "Missing") ) )
+```
+
+We will use the newly transformed `education` variable for grouping, summarizing, and plotting below.
+
+# Investigating healthcare costs
+
+## Step 1: Calculate a `total_cost` variable
+
+Each patient record notes the location and cost of up to three locations. Add together these costs (`first_visit_cost`, `second_visit_cost`, and `third_visit_cost`) to create a `total_cost` variable.
+
+```{r}
+tb_clean2 <- tb_clean %>% 
+  "WRITE_YOUR_CODE_HERE"
+```
+
+## Step 2: Summarize costs by group
+
+Let's compare the cost of treatment at different health facilities using a summary table. Use `{dplyr}` verbs to group by education level and create a summary table with two variables:
+
+-   The number of patients in each education level
+-   The mean total cost for each education level
+
+Store the resulting tibble as an object called `edu_edu_cost_table`.
+
+```{r}
+edu_cost_table <- tb_clean2 %>% 
+  "WRITE_YOUR_CODE_HERE"
+
+edu_cost_table
+```
+
+Reorder the rows of the summary table to go from highest to lowest mean cost.
+
+```{r}
+"WRITE_YOUR_CODE_HERE"
+```
+
+Here we can see that TB patients in this study with little to no schooling generally spent less money on treatment than graduates. This data can be better communicated with a plot.
+
+# Visualize data with {esquisse}
+
+Using `esquisser()` and the costs summary table you created earlier, create a bar plot of mean costs, by education level.
+
+```{r}
+# esquisser(edu_cost_table)
+
+"PASTE_YOUR_ESQUISSE_CODE_HERE"
+```
+
+When you are satisfied with your plot, use `ggsave()` to save your plot above in a new folder called "outputs". Remember to specify the file type and dimensions of the image you want to export.
+
+```{r}
+# Save your plot(s)
+"WRITE_YOUR_CODE_HERE"
+```
+
+# Wrap up
+
+That's it for this assignment! We will choose 2-3 people to present your work during the workshop. If you would like to share your results with the class, please let an instructor know.
+
+# Bonus Challenge (Optional and ungraded)
+
+If you finish early and have extra time, you can explore and transform the dataset further.
+
+We can look at two types of health facilities in the dataset: private and public (government).
+
+```{r}
+# List of 9 healthcare locations
+tb_clean2 %>% count(first_visit_location)
+```
+
+Note: PHC = primary health center, GH = govt hospital etc.
+
+## Comparing Delays in Public vs Private Health Facilities
+
+Let's create a new variable indicating whether a healthcare location is private or public. We can do this using the `str_dectect()` function from the `{stringr}` package of tidyverse.
+
+```{r}
+tb_clean3 <- tb_clean2 %>% 
+  mutate(first_visit_type = case_when(
+    str_detect(first_visit_location, "Pvt") ~ "Private",
+    TRUE ~ "Public"))
+```
+
+Inspect the new variable in `tb_clean3`.
+
+Your assignment for this challenge is to summarize delays in treatment, and compare the length of delays between private and public health facilities.
+
+You can start by making summary table of `treatment_initiation_delay_in_days` or `health_sys_delay_in_days`, grouped by `first_visit_type`. Then visualize the data and draw insights from your findings. 

@@ -41,7 +41,7 @@ The lesson notes (linked above) can be very helpful for completing the exercise 
 
 Now that you have set up your RStudio project, you can load in and clean your dataset.
 
-To get started, **load in the needed packages**: {tidyverse}, {here}, and {esquisse}.
+To get started, **load in the needed packages**: {tidyverse}, {here}, {janitor}, and {esquisse}.
 
 ```{r}
 # Load packages
