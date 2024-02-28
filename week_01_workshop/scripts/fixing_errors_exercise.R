@@ -1,4 +1,4 @@
-## Workshop exercise 1: Catching R errors
+## Workshop exercise 1: Catching R Errors
 
 # NAME: 
 
