@@ -1,0 +1,181 @@
+---
+title: "Workshop 9: Histograms, line graphs, and scale functions"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    toc: true
+    number_sections: true
+author: "Author's name here"
+date: "2024-03-05"
+editor_options: 
+  chunk_output_type: inline
+  markdown: 
+  wrap: none
+---
+
+# Introduction
+
+Welcome!
+
+This workshop is a hands-on approach to data visualization and reviewing some functions you're already familiar with.
+
+This week's lesson notes have been linked below. They can be very helpful for completing the exercise, so feel free to refer to them during the workshop!
+
+-   [Lines, scales, and labels](https://the-graph-courses.github.io/data_on_display_wp/lessons/ls03_line_graphs.html)
+
+-   [Histograms with {ggplot2}](https://the-graph-courses.github.io/data_on_display_wp/lessons/ls04_histograms.html)
+
+# Set up for the exercise
+
+1.  **First download the repo to your local computer.** To get started, you should download, unzip, and look through the assignment folder.
+
+2.  **Open the** **RStudio Project** by clicking on the relevant *.Rproj* file in the unzipped workshop folder. Make sure you have opened week_09_workshop.Rproj in RStudio by looking at the name of your RStudio window, or in the upper right corner of your screen.
+
+3.  **Open the assignment Rmd.** Navigate to the Files tab in RStudio and open the "rmd" folder. You will be working in the file called "week_09_exercise.Rmd". This Rmd contains both the instructions and the workshop assignment in one file.
+
+4.  **Complete the assignment.** Work through the steps in "week_09_exercise.Rmd". Replace every instance of `"WRITE_YOUR_CODE_HERE"` with your answers. The assignment should be submitted individually, but you are encouraged to brainstorm with partners. Though you are allowed to work with group members, *it is important that all the code you submit has been typed yourself*.
+
+# Load packages
+
+```{r}
+pacman::p_load(tidyverse, here, outbreaks)
+```
+
+# Data: Linelist of Ebola cases from West Africa
+
+Today we will use a data from from the {outbreaks} package. Run the code below to load in a data frame of simulated Ebola linelist for West Africa, 2014-1015.
+
+```{r}
+# Load data from package
+ebola_wa <- outbreaks::ebola_sim_clean$linelist
+
+# Inspect dataframe
+ebola_wa
+```
+
+**Checkpoint**: You should have 5,829 rows and 11 columns if you've loaded the data correctly! Make sure that you have the correct number of rows and columns when you inspect the data frame before proceeding.
+
+```{r}
+# Look at data classes of each variable
+glimpse(ebola_wa)
+```
+
+Key takeaway: We have several **date** variables that could be visualized on the continuous axis for histograms and line graphs.
+
+Use the `summary()` function to look at the date ranges in this dataset.
+
+```{r}
+# Look at variable ranges
+"WRITE YOUR CODE HERE"
+```
+
+You can see that cases are recorded from early 2015 to mid 2015. The variables `date_of_hospitalisation` and `date_of_onset` are the most complete (they have no NAs), so we will be using them for visualization in this exercise.
+
+# Histograms
+
+First, create a basic histogram with 12 bars, showing the distribution of the `date_of_hospitalisation` variable.
+
+-   Choose a custom fill color and outline color for the bars of your histogram (use any colors of your choice).
+
+```{r}
+"WRITE YOUR CODE HERE"
+```
+
+We can set the bin width for this histogram as usual. In this case, since the variable is a date, the bin width represents the **number of days**.
+
+-   Adjust your code to plot a histogram with weekly bins (every 7 days).
+
+```{r}
+"WRITE YOUR CODE HERE"
+```
+
+-   Now, build on the code from the previous chunk to add a relevant plot title and axis labels.
+
+```{r}
+"WRITE YOUR CODE HERE"
+```
+
+When you plot dates, sometimes the default axis labels may not be ideal. In this plot, `ggplot()` automatically labels the x-axis every 4 months, but we may want to modify this. In the pre-work lessons you learned how to customize scale breaks using `scale_x_continuous(breaks = ...)`, but for date variables we will use a slightly different method.
+
+## Customizing Date Axis with `scale_x_date()`
+
+*In this section, keep building on the code you created in the chunks above. This way, your histograms will have a similar appearance, but with more details added as you progress in the exercise!*
+
+You can customize the frequency of date axis labels using a function called `scale_x_date()` and specifying `date_breaks`.
+
+For example, let's say we want to label the axis every **two months**. To customize the labels, simply add this layer to your previous code:
+
+```{r}
+"PASTE YOUR CODE HERE" +
+  scale_x_date(date_breaks = "2 months")
+```
+
+You might notice that the axis tick labels (AKA the date format) are now quite long. Let's change the format from `YYYY-MM-DD` to `Month-YY` instead.
+
+To customize the format of the dates, we can add `date_labels` inside `scale_x_date()` and set a specific date format, like so:
+
+```{r}
+"PASTE YOUR CODE HERE" +
+  scale_x_date(date_breaks = "2 months", 
+               date_labels = "%B %y") # see table below for explanation
+```
+
+When customizing date formats in {ggplot2}, we use specific letter codes to represent various components of a date. Here are some common codes that you can give to `date_labels`:
+
+![](images/date_codes_table.png)
+
+Now, modify the date format of the axis labels on the previous histogram one last time to display **ABBREVIATED MONTH NAMES** for each month.
+
+```{r}
+"WRITE YOUR CODE HERE"
+```
+
+# Time series plot with `geom_line()`
+
+Let's create a line graph to look at Ebola incidence changed over the time period of this study, by date of symptom onset.
+
+## Basic time series line graph with summarized data
+
+First, create a summary data frame showing the number of cases for each **onset date**, split by **outcome** (i.e., calculate the total number of cases grouped by onset date and outcome). Omit NA values from your summary table.
+
+```{r}
+ebola_wa_summary <- "WRITE YOUR CODE HERE"
+
+ebola_wa_summary
+```
+
+**Checkpoint**: Your summary table should have 674 rows and 3 columns.
+
+Now, plot a line graph showing the number of cases per onset date, and color the lines by outcome.
+
+```{r}
+"WRITE YOUR CODE HERE"
+```
+
+Next, make the following modifications:
+
+1)  Edit the line width and transparency of your lines.
+
+2)  Use `scale_x_date()` to specify date breaks and formatting of your choice.
+
+3)  Add a title, subtitle, and edit the axis names.
+
+4)  Change the legend title from "outcome" to "Outcome".
+
+```{r}
+"WRITE YOUR CODE HERE"
+```
+
+# Wrap up
+
+That's it for this assignment! We will choose 2-3 people to present your work during the workshop. If you would like to share your results with the class, please let an instructor know.
+
+The group representative should prepare to screenshare and give a short (3-4 sentence) presentation.
+
+Choose and highlight one aspect of the workshop that would be helpful and interesting to the class. For example, you can choose a question that your group found especially tricky, and explain how you found the solution. Or you can display one of your plots, and share some tips for additional customization.
+
+# Submission: Upload Rmd file
+
+Once you have finished the tasks above, you should save your answers and upload your assignment Rmd on the workshop webpage. You should upload just one Rmd file with your answers (do not upload the knitted HTML or a zipped folder). Make sure to include your name in the YAML header at the top of the script.
+
+The due date for the assignment is **Friday, March 8th at 23:59 PM UTC.**
